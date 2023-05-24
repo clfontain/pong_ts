@@ -1,9 +1,3 @@
-
-
-
-
-//export default(context:CanvasRenderingContext2D, canvas:HTMLCanvasElement, paddle:paddleObj) => {
-	
 	
 export	class Paddle
 	{
@@ -17,17 +11,12 @@ export	class Paddle
 		constructor(x:number, y:number, height:number, width:number, color:string, v_y:number, lastKey:string)
 		{
 			this.x = x;
-			//this.y = canvas.height - 30;
 			this.y = y;
-			//this.height = 20;
 			this.height = height;
-			//this.width = paddle.width;
 			this.width = width;
-			//this.color = "white";
 			this.color = color;
 			this.v_y = v_y;
 			this.lastKey = lastKey;
-			//console.log(this.velocity_x);
 		}
 	}
 
@@ -60,20 +49,5 @@ export interface keys
 		w:boolean;
 		s:boolean;
 	}
-
-/*}
-	//let padz = new Paddle(paddle.x, paddle.vel_x);
-	//console.log(padz.x);
-	//padz.move();
-	//console.log(padz.x);
-	if (paddle.x <= 0)
-	{
-		paddle.x = 0;
-	}
-	else if (paddle.x + paddle.width >= canvas.width)
-	{
-		paddle.x = canvas.width - paddle.width;
-	}
-}*/
 
 

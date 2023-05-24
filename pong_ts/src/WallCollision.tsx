@@ -1,6 +1,6 @@
-import ballObj from "./data/ballObj";
+import {Ball} from "./Ball"
 
-export function WallCollision(ball:ballObj, canvas:HTMLCanvasElement)
+export function WallCollision(ball:Ball, canvas:HTMLCanvasElement)
 {
 	if ( ball.y - ball.rad <= 0 || 
 		ball.y + ball.rad >= canvas.height)

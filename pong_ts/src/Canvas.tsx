@@ -1,10 +1,9 @@
 import React from 'react';
 import {useEffect,useRef} from 'react';
 import './App.css';
-import {BallMovement} from './BallMovement'
-import ballObj from "./data/ballObj"
+import {BallMovement} from './Ball'
+import {Ball} from './Ball'
 import {WallCollision} from './WallCollision'
-
 import {Paddle} from "./Paddle"
 import {move} from "./Paddle"
 import {PaddleCollision} from './PaddleCollision'
@@ -41,8 +40,7 @@ const Canvas = () => {
 				key.s = false;
 				paddle.v_y = 0;
 			})
-		let ball = new ballObj(20, 200, 5, 5,10,5);
-		console.log("salut");
+		let ball = new Ball(20, 200, 5, 5,10,5);
 		let paddle = new Paddle(20, 20 -30, 100, 20,"white", 0, "null");
 		const render = () => 
 		{
@@ -60,7 +58,6 @@ const Canvas = () => {
 				paddle.v_y = -5;
 			else if (key.s === true && paddle.lastKey === "s")
 				paddle.v_y = 5;
-			//paddle.v_y = 0;
 			PaddleCollision(ball, paddle);
 			requestAnimationFrame(render);
 		}
