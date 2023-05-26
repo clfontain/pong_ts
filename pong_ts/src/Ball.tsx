@@ -27,11 +27,21 @@ export class Ball {
 	}
 }
 
+export function BallResize(ball:Ball)
+{
+	let ratio:number = window.innerHeight * 0.66;
+	ball.x = Math.round(ratio /2);
+	ball.y = Math.round(ratio /2);
+	ball.rad = Math.round(ratio/40);
+	/*ball.height = Math.round(ratio / 3);
+	ball.width = Math.round(ratio / 20);*/
+}
+
 export function	draw(context:CanvasRenderingContext2D, ball:Ball)
 	{
 		context.beginPath();
 		//context.fillStyle = 'red';
-		context.rect(ball.x,ball.y,10,10);
+		context.arc(ball.x,ball.y, ball.rad,0, 2*Math.PI);
 		context.strokeStyle ="white";
 		context.lineWidth =4;
 		context.fill();

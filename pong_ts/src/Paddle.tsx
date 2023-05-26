@@ -20,6 +20,16 @@ export	class Paddle
 		}
 	}
 
+export function PaddleResize(paddle:Paddle, prev:number)
+{
+	//let test:number = 
+	let ratio:number = window.innerHeight * 0.66;
+	paddle.x = Math.round(ratio / 10);
+	paddle.y = Math.round(ratio /10);
+	paddle.height = Math.round(ratio / 3);
+	paddle.width = Math.round(ratio / 20);
+}
+
 export	function move(context:CanvasRenderingContext2D, canvas:HTMLCanvasElement, paddle:Paddle)
 	{
 		paddle.y += paddle.v_y;
