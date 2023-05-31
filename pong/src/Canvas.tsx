@@ -10,14 +10,28 @@ import {PaddleCollision} from './PaddleCollision'
 import {keys} from "./Paddle"
 import {PaddleResize} from "./Paddle"
 import {BallResize} from "./Ball"
-import io, { Socket } from 'socket.io-client';
+import {GameState} from "./GameState"
+import { io, Socket } from 'socket.io-client';
 
-const Canvas = () => {
 
-	let socket:any = io();
-	const canvasRef = useRef<HTMLCanvasElement | null>(null);
-	useEffect(() => 
+function Canvas(){
+
+	const socket = io("http://localhost:3001");
+	const paddx = new GameState(4,7);
+	/*const sendMessage = () =>
 	{
+		socket.emit("send_message", paddx);
+	}
+	sendMessage();*/
+	const canvasRef = useRef<HTMLCanvasElement | null>(null);
+	useEffect(() =>
+	{
+
+		socket.on("response_up", (data) =>
+		{
+			paddx.x = data.x;
+			console.log(paddx.x);
+		})
 		let key:keys = {w:false, s:false};
 		window.addEventListener("keydown", e =>
 		{
@@ -26,6 +40,7 @@ const Canvas = () => {
 			case 'w':
 				key.w = true;
 				paddle.lastKey = "w";
+				socket.emit("move_up", paddx);
 				//paddle.x += paddle.vel_x;
 				break;
 				case 's':
@@ -52,7 +67,7 @@ const Canvas = () => {
 			let ratio:number = window.innerHeight * 0.66;
 			let ball = new Ball(Math.round(ratio /2), Math.round(ratio/2), 5, 5,Math.round(ratio / 40),10);
 			let paddle = new Paddle(Math.round(ratio / 10), ratio /10, ratio /3, ratio / 20,"white", 0, "null");
-			const render = () => 
+			const render = () =>
 			{
 				context.clearRect(0,0,canvas.width, canvas.height);
 				BallMovement(context, ball);
@@ -66,6 +81,7 @@ const Canvas = () => {
 			requestAnimationFrame(render);
 		}
 		render();
+		
 		const handleResize = () => {
 			let prev:number = context.canvas.height;
 			let ratio:number = window.innerHeight * 0.66;
@@ -78,8 +94,8 @@ const Canvas = () => {
 		window.addEventListener("resize", handleResize);
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
-	
-	return (<canvas 
+
+	return (<canvas
 		id="canvas"
 		ref={canvasRef}
 		/*height="500px"
