@@ -1,5 +1,6 @@
-	
-export	class Paddle
+import {gamestate} from "../../back/game"	
+
+/*export	class Paddle
 	{
 		x:number;
 		y:number;
@@ -19,8 +20,8 @@ export	class Paddle
 			this.lastKey = lastKey;
 		}
 	}
-
-export function PaddleResize(paddle:Paddle, prev:number)
+*/
+/*export function PaddleResize(paddle:Paddle, prev:number)
 {
 	//let test:number = 
 	let ratio:number = window.innerHeight * 0.66;
@@ -28,21 +29,10 @@ export function PaddleResize(paddle:Paddle, prev:number)
 	paddle.y = Math.round(ratio /10);
 	paddle.height = Math.round(ratio / 3);
 	paddle.width = Math.round(ratio / 20);
-}
+}*/
 
-export	function move(context:CanvasRenderingContext2D, canvas:HTMLCanvasElement, paddle:Paddle)
+export	function drawPlayer(context:CanvasRenderingContext2D, canvas:HTMLCanvasElement, paddle:gamestate["players"][0])
 	{
-		paddle.y += paddle.v_y;
-		if (paddle.y + paddle.height + paddle.v_y >= canvas.height)
-		{
-			paddle.v_y = 0;
-			paddle.y = 400;
-		}
-		if (paddle.y + paddle.v_y <= 0)
-		{
-			paddle.v_y = 0;
-			paddle.y = 0;
-		}
 		context.beginPath();
 		context.rect(paddle.x, paddle.y, paddle.width, paddle.height);
 		context.fillStyle = paddle.color;

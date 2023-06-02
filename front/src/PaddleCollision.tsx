@@ -1,4 +1,4 @@
-import {Ball} from "./Ball"
+/*import {Ball} from "./Ball"
 import {Paddle} from "./Paddle";
 
 export function PaddleCollision(ball:Ball, paddle:Paddle)
@@ -10,3 +10,5 @@ export function PaddleCollision(ball:Ball, paddle:Paddle)
 		ball.dx = 5;
 	}
 }
+*/
+export {}

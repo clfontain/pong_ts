@@ -28,7 +28,7 @@ const { Server } = require("socket.io");
 
 const cors = require("cors");
 app.use(cors());
-
+let end:boolean = false;
 //let socket_tab;
 
 const io = new Server(server, {
@@ -39,37 +39,27 @@ const io = new Server(server, {
 });
 
 const client_tab:any = [];
-let state:gamestate;
 let player_size:number = 0;
+const state:gamestate = initGame();
 
 io.on("connection", (client:Socket) => {
 	
-	//console.log(`User Connected: ${socket.id}`);
-	//socket.join("some room");
 	player_size++;
+	
 	client_tab[client.id] = player_size;
-	//`Your are ${player_size}`
-	client.emit("id_socket", client_tab[client.id]);
-	client.on("newGame", newgame);
-	function newgame()
-	{
-		state = initGame();
-		gameLoop(state);
-	}
 
-	/*client.on("move_up", (data:any) => {
-		data.x += 1;
-		io.emit("response_up", data);
-	})*/
-
+		
 	client.on("disconnect", () => {
 		console.log("allo ?")
 		io.emit("end");
-})
+	})
 });
 
 
-
+setInterval(() => {
+	gameLoop(state);
+	io.emit("gameState", state);
+}, 1000/20);
 
 /*app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');

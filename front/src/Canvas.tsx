@@ -1,46 +1,36 @@
 import React from 'react';
 import {useEffect,useRef, useState} from 'react';
 import './App.css';
-import {BallMovement} from './Ball'
-import {Ball} from './Ball'
-import {WallCollision} from './WallCollision'
-import {Paddle} from "./Paddle"
-import {move} from "./Paddle"
-import {PaddleCollision} from './PaddleCollision'
+import {drawBall} from './Ball'
+//import {WallCollision} from './WallCollision'
+//import {PaddleCollision} from './PaddleCollision'
 import {keys} from "./Paddle"
-import {PaddleResize} from "./Paddle"
+import {drawPlayer} from "./Paddle"
 import {BallResize} from "./Ball"
-import {GameState} from "./GameState"
 import { io, Socket } from 'socket.io-client';
+import {gamestate, initGame} from "./copy_game"
 
 
 function Canvas(){
 
-	const paddx = new GameState(4,7);
 	const [hasLeft, setHasLeft] = useState(false);
 	
-	
+	let state:gamestate = initGame();
 	/*const sendMessage = () =>
 	{
 		socket.emit("send_message", paddx);
 	}
 	sendMessage();*/
+	const socket = io("http://localhost:3001");
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
 	useEffect(() =>
 	{
-		const socket = io("http://localhost:3001");
-		console.log("Use state begin")
-		socket.emit("newGame");
 		socket.on("end", () =>{
 			return (setHasLeft(true))
 		});
-		socket.on("id_socket", (data) => {
-			console.log(`your are ${data}`);
-		});
-		socket.on("response_up", (data) =>
-		{
-			paddx.x = data.x;
-			console.log(paddx.x);
+		socket.on("gameState", (data) => {
+			state = data;
+			console.log(state.ball.x);
 		})
 		let key:keys = {w:false, s:false};
 		window.addEventListener("keydown", e =>
@@ -48,62 +38,74 @@ function Canvas(){
 			switch (e.key)
 			{
 			case 'w':
-				key.w = true;
+				/*key.w = true;
 				paddle.lastKey = "w";
-				socket.emit("move_up", paddx);
-				//paddle.x += paddle.vel_x;
 				break;
 				case 's':
 					key.s = true;
 				paddle.lastKey = "s";
-				break;
+				break;*/
 			}
 		})
 		window.addEventListener("keyup", e =>
 		{
 			if (e.key === "w")
-				key.w = false;
+			{}
+				/*key.w = false;
 				paddle.v_y = 0;
-				if (e.key === 's')
+			if (e.key === 's')
 				key.s = false;
-				paddle.v_y = 0;
-			})
-			const canvas = canvasRef.current;
-			if (!canvas)
-			return;
-			const context = canvas.getContext('2d');
-			if (!context)
-			return;
-			let ratio:number = window.innerHeight * 0.66;
-			let ball = new Ball(Math.round(ratio /2), Math.round(ratio/2), 5, 5,Math.round(ratio / 40),10);
-			let paddle = new Paddle(Math.round(ratio / 10), ratio /10, ratio /3, ratio / 20,"white", 0, "null");
-			const render = () =>
+				paddle.v_y = 0;*/
+		})
+		
+			/*//let ratio:number = window.innerHeight * 0.66;
+			//let ball = new Ball(Math.round(ratio /2), Math.round(ratio/2), 5, 5,Math.round(ratio / 40),10);
+			//let paddle = new Paddle(Math.round(ratio / 10), ratio /10, ratio /3, ratio / 20,"white", 0, "null");
+			function render(state:gamestate)
 			{
+				if (!context)
+				return;
+				if (!canvas)
+					return;
+				if (!state)
+					return;
 				context.clearRect(0,0,canvas.width, canvas.height);
-				BallMovement(context, ball);
-			WallCollision(ball, canvas);
-			move(context, canvas, paddle);
+				//drawBall(context, state.ball);
+				//drawPlayer(context, canvas, state.players[0]);
+				//WallCollision(state.ball, canvas);
 			if (key.w === true && paddle.lastKey === "w")
 				paddle.v_y = -5;
 			else if (key.s === true && paddle.lastKey === "s")
 				paddle.v_y = 5;
-			PaddleCollision(ball, paddle);
-			requestAnimationFrame(render);
+			//PaddleCollision(state.ball, state.players[0]);
+			//requestAnimationFrame(render);
 		}
-		render();
+		//render();
 		
 		const handleResize = () => {
 			let prev:number = context.canvas.height;
 			let ratio:number = window.innerHeight * 0.66;
 			context.canvas.height = ratio;
 			context.canvas.width = window.innerWidth;
-			PaddleResize(paddle, prev);
-			BallResize(ball);
+			//PaddleResize(paddle, prev);
+			//BallResize(ball);
 		}
 		handleResize();
 		window.addEventListener("resize", handleResize);
-		return () => window.removeEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);*/
 	}, []);
+	let here:boolean = false
+	useEffect(() => {
+			const canvas = canvasRef.current;
+			if (!canvas)
+				return;
+			const context = canvas.getContext('2d');
+				if (!context)
+			return;
+			context.clearRect(0,0,canvas.width, canvas.height);
+			console.log(state.ball.x);
+			drawBall(context, state.ball);
+		}, [state]);
 
 	return (<>
 		{ hasLeft ? ( 

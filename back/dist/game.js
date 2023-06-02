@@ -5,14 +5,14 @@ function initGame() {
     const state = {
         players: [{
                 x: 4, y: 5, height: 30, width: 50, color: "white",
-                v_y: 3, lastKey: "null"
+                v_y: 0, lastKey: "null"
             },
             {
                 x: 4, y: 5, height: 30, width: 50, color: "white",
                 v_y: 0, lastKey: "null"
             }],
         ball: {
-            x: 0, y: 4, dx: 5, dy: 5, rad: 10, speed: 5
+            x: 250, y: 250, dx: 1, dy: 1, rad: 10, speed: 2
         },
     };
     return (state);
@@ -41,5 +41,8 @@ function gameLoop(state) {
     playerWall(playerTwo);
     ball.x += ball.dx;
     ball.y += ball.dy;
+    //console.log(ball.x);
+    //console.log(ball.dx);
+    //console.log(`state ${state.ball.x}`);
 }
 exports.gameLoop = gameLoop;

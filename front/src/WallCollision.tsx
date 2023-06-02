@@ -1,4 +1,4 @@
-import {Ball} from "./Ball"
+/*import {Ball} from "./Ball"
 
 export function WallCollision(ball:Ball, canvas:HTMLCanvasElement)
 {
@@ -15,3 +15,5 @@ export function WallCollision(ball:Ball, canvas:HTMLCanvasElement)
 		ball.speed *= 1;
 	}
 }
+*/
+export {}
