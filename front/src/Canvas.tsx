@@ -15,13 +15,21 @@ function Canvas(){
 
 	const [hasLeft, setHasLeft] = useState(false);
 	
-	let state:gamestate = initGame();
+	const [state, setState] = useState({players: [{
+		x: 4, y: 5, height: 30, width: 50, color: "white",
+		v_y : 0, lastKey: "null"},
+	{
+		x: 4, y: 5, height: 30, width: 50, color: "white",
+		v_y : 0, lastKey: "null"}],
+	ball:{
+		x:250, y:250, dx: 5, dy: 5, rad: 10, speed:5
+	},});
 	/*const sendMessage = () =>
 	{
 		socket.emit("send_message", paddx);
 	}
 	sendMessage();*/
-	const socket = io("http://localhost:3001");
+	const socket = io("http://localhost:3003");
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
 	useEffect(() =>
 	{
@@ -29,8 +37,8 @@ function Canvas(){
 			return (setHasLeft(true))
 		});
 		socket.on("gameState", (data) => {
-			state = data;
-			console.log(state.ball.x);
+			setState(data);
+			//console.log(state.ball.x);
 		})
 		let key:keys = {w:false, s:false};
 		window.addEventListener("keydown", e =>

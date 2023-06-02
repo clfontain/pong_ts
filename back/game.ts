@@ -68,6 +68,10 @@ export function gameLoop(state:gamestate)
 	playerWall(playerTwo);
 	ball.x += ball.dx;
 	ball.y += ball.dy;
+	if (ball.x >= 500)
+		ball.x = 0;
+		if (ball.y >= 800)
+		ball.y = 0;
 	//console.log(ball.x);
 	//console.log(ball.dx);
 	//console.log(`state ${state.ball.x}`);
