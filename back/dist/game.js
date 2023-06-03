@@ -12,7 +12,7 @@ function initGame() {
                 v_y: 0, lastKey: "null"
             }],
         ball: {
-            x: 250, y: 250, dx: 1, dy: 1, rad: 10, speed: 2
+            x: 0.5, y: 0.5, dx: 0.5, dy: 0.5, rad: 10, speed: 5
         },
     };
     return (state);
@@ -39,12 +39,26 @@ function gameLoop(state) {
     playerTwo.y += playerTwo.v_y;
     playerWall(playerOne);
     playerWall(playerTwo);
-    ball.x += ball.dx;
-    ball.y += ball.dy;
-    if (ball.x >= 500)
-        ball.x = 0;
-    if (ball.y >= 800)
-        ball.y = 0;
+    ball.x += 0.001;
+    ball.y += 0.001;
+    if (ball.x >= 1)
+        ball.x = 0.45;
+    if (ball.y >= 1)
+        ball.y = 0.45;
+    //ball.x += ball.dx;
+    //ball.y += ball.dy;
+    /*if ( ball.y - ball.rad <= 0 ||
+        ball.y + ball.rad >= 500)
+    {
+        ball.dy *= -1;
+        ball.speed *= 1;
+    }
+    if ( ball.x + ball.rad >= 800 ||
+        ball.x - ball.rad <= 0)
+    {
+        ball.dx *= -1;
+        ball.speed *= 1;
+    }*/
     //console.log(ball.x);
     //console.log(ball.dx);
     //console.log(`state ${state.ball.x}`);

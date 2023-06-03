@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import {useEffect,useRef, useState} from 'react';
 import './App.css';
 import {drawBall} from './Ball'
@@ -9,12 +9,16 @@ import {drawPlayer} from "./Paddle"
 import {BallResize} from "./Ball"
 import { io, Socket } from 'socket.io-client';
 import {gamestate, initGame} from "./copy_game"
+import e from 'express';
 
 
 function Canvas(){
 
-	const [hasLeft, setHasLeft] = useState(false);
-	
+	//const [hasLeft, setHasLeft] = useState(false);
+	const [width, setWidth] = useState(0);
+	const [height, setHeight] = useState(0);
+	const pixelRatio = window.devicePixelRatio;
+	//const ref = useRef<HTMLDivElement | null>(null);
 	const [state, setState] = useState({players: [{
 		x: 4, y: 5, height: 30, width: 50, color: "white",
 		v_y : 0, lastKey: "null"},
@@ -22,37 +26,39 @@ function Canvas(){
 		x: 4, y: 5, height: 30, width: 50, color: "white",
 		v_y : 0, lastKey: "null"}],
 	ball:{
-		x:250, y:250, dx: 5, dy: 5, rad: 10, speed:5
+		x:250, y:250, dx: 1, dy: 1, rad: 10, speed:5
 	},});
-	/*const sendMessage = () =>
-	{
-		socket.emit("send_message", paddx);
-	}
-	sendMessage();*/
-	const socket = io("http://localhost:3003");
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+	useEffect(() => {
+		setWidth(window.innerWidth);
+		setHeight(window.innerHeight > 400 ? window.innerHeight : 400);
+	}, []);
 	useEffect(() =>
 	{
-		socket.on("end", () =>{
-			return (setHasLeft(true))
-		});
+		const socket = io("http://localhost:3003");
 		socket.on("gameState", (data) => {
 			setState(data);
-			//console.log(state.ball.x);
-		})
+		});
+		/*socket.on("end", () =>{
+			return (setHasLeft(true))
+		});*/
+
 		let key:keys = {w:false, s:false};
 		window.addEventListener("keydown", e =>
 		{
 			switch (e.key)
 			{
 			case 'w':
-				/*key.w = true;
-				paddle.lastKey = "w";
+				//socket.emit("move")
+				//key.w = true;
+				//paddle.lastKey = "w";
 				break;
-				case 's':
-					key.s = true;
-				paddle.lastKey = "s";
-				break;*/
+			case 's':
+				socket.emit("move_down");
+				//key.s = true;
+			//paddle.lastKey = "s";
+			break;
 			}
 		})
 		window.addEventListener("keyup", e =>
@@ -65,7 +71,7 @@ function Canvas(){
 				key.s = false;
 				paddle.v_y = 0;*/
 		})
-		
+
 			/*//let ratio:number = window.innerHeight * 0.66;
 			//let ball = new Ball(Math.round(ratio /2), Math.round(ratio/2), 5, 5,Math.round(ratio / 40),10);
 			//let paddle = new Paddle(Math.round(ratio / 10), ratio /10, ratio /3, ratio / 20,"white", 0, "null");
@@ -89,20 +95,10 @@ function Canvas(){
 			//requestAnimationFrame(render);
 		}
 		//render();
-		
-		const handleResize = () => {
-			let prev:number = context.canvas.height;
-			let ratio:number = window.innerHeight * 0.66;
-			context.canvas.height = ratio;
-			context.canvas.width = window.innerWidth;
-			//PaddleResize(paddle, prev);
-			//BallResize(ball);
-		}
-		handleResize();
-		window.addEventListener("resize", handleResize);
-		return () => window.removeEventListener("resize", handleResize);*/
+		*/
+
 	}, []);
-	let here:boolean = false
+
 	useEffect(() => {
 			const canvas = canvasRef.current;
 			if (!canvas)
@@ -110,24 +106,44 @@ function Canvas(){
 			const context = canvas.getContext('2d');
 				if (!context)
 			return;
-			context.clearRect(0,0,canvas.width, canvas.height);
-			console.log(state.ball.x);
-			drawBall(context, state.ball);
-		}, [state]);
+			context.clearRect(0,0, context.canvas.width, context.canvas.height);
+			context.beginPath();
+			context.arc( context.canvas.width * state.ball.x , context.canvas.height * state.ball.y, 10 ,0, 2*Math.PI);
+			context.strokeStyle ="white";
+			context.stroke();
+			context.fillStyle = "white";
+			context.lineWidth =4;
+			context.fill();
+			//drawPlayer(context, canvas, state.players[0]);
+			/*const handleResize = () => {
+				//let prev:number = context.canvas.height;
+				//let ratio:number = window.innerHeight * 0.5;
+				context.canvas.width = window.innerWidth;
+				context.canvas.height = 3 * window.innerWidth / 4;
+				//PaddleResize(paddle, prev);
+				//BallResize(ball);
+			}*/
+			/*handleResize();
+			window.addEventListener("resize", handleResize);
+			return () => window.removeEventListener("resize", handleResize);*/
+		}, [state, width, height]);
 
-	return (<>
-		{ hasLeft ? ( 
+		const displayWidth = Math.floor(pixelRatio * width);
+  		const displayHeight = Math.floor(pixelRatio * height);
+  		//const style = { width, height };
+	return (/*<>
+		{ hasLeft ? (
 		<div> Has left</div> ) :
-	(
-	 <canvas
+	(*/
+	<canvas
 		id="canvas"
 		ref={canvasRef}
-		/*height="500px"
-		width="800px"*/>
-		</canvas>
+		width={displayWidth}
+		height={displayHeight}
+		style={{width: '100%', height: '100%'}}
+		background-color="black">
+	</canvas>
 	)}
-		</>);
-}
 
 export default Canvas
 

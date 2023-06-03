@@ -43,23 +43,29 @@ let player_size:number = 0;
 const state:gamestate = initGame();
 
 io.on("connection", (client:Socket) => {
-	
+
 	player_size++;
-	
+
 	client_tab[client.id] = player_size;
 
-		
+
 	client.on("disconnect", () => {
-		console.log("allo ?")
+		//console.log("allo ?")
 		io.emit("end");
 	})
+
+	client.on("move_down", () => {
+		console.log("je move down");
+		state.players[0].v_y += 1;
+	})
 });
+
 
 
 setInterval(() => {
 	gameLoop(state);
 	io.emit("gameState", state);
-}, 1000/20);
+}, 17);
 
 /*app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');

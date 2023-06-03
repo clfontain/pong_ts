@@ -23,7 +23,7 @@ export interface gamestate
 
 export function initGame()
 {
-	const state:gamestate = { 
+	const state:gamestate = {
 		players: [{
 			x: 4, y: 5, height: 30, width: 50, color: "white",
 			v_y : 0, lastKey: "null"},
@@ -31,10 +31,10 @@ export function initGame()
 			x: 4, y: 5, height: 30, width: 50, color: "white",
 			v_y : 0, lastKey: "null"}],
 		ball:{
-			x:250, y:250, dx: 1, dy: 1, rad: 10, speed:2
+			x:0.5, y:0.5, dx: 0.5, dy: 0.5, rad: 10, speed:5
 		},
-	}	
-	
+	}
+
 	return (state);
 };
 
@@ -58,7 +58,7 @@ export function gameLoop(state:gamestate)
 	if (!state)
 		return;
 	const playerOne = state.players[0];
-	const playerTwo = state.players[1];	
+	const playerTwo = state.players[1];
 	const ball = state.ball;
 
 	playerOne.y += playerOne.v_y;
@@ -66,12 +66,28 @@ export function gameLoop(state:gamestate)
 
 	playerWall(playerOne);
 	playerWall(playerTwo);
-	ball.x += ball.dx;
-	ball.y += ball.dy;
-	if (ball.x >= 500)
-		ball.x = 0;
-		if (ball.y >= 800)
-		ball.y = 0;
+	ball.x += 0.001;
+	ball.y += 0.001;
+	if (ball.x >= 1)
+		ball.x = 0.45;
+	if (ball.y >= 1)
+		ball.y = 0.45;
+
+	//ball.x += ball.dx;
+	//ball.y += ball.dy;
+
+	/*if ( ball.y - ball.rad <= 0 ||
+		ball.y + ball.rad >= 500)
+	{
+		ball.dy *= -1;
+		ball.speed *= 1;
+	}
+	if ( ball.x + ball.rad >= 800 ||
+		ball.x - ball.rad <= 0)
+	{
+		ball.dx *= -1;
+		ball.speed *= 1;
+	}*/
 	//console.log(ball.x);
 	//console.log(ball.dx);
 	//console.log(`state ${state.ball.x}`);
