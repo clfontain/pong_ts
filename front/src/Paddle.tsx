@@ -1,4 +1,4 @@
-import {gamestate} from "../../back/game"	
+import {gamestate} from "../../back/game"
 
 /*export	class Paddle
 	{
@@ -23,7 +23,7 @@ import {gamestate} from "../../back/game"
 */
 /*export function PaddleResize(paddle:Paddle, prev:number)
 {
-	//let test:number = 
+	//let test:number =
 	let ratio:number = window.innerHeight * 0.66;
 	paddle.x = Math.round(ratio / 10);
 	paddle.y = Math.round(ratio /10);
@@ -34,16 +34,17 @@ import {gamestate} from "../../back/game"
 export	function drawPlayer(context:CanvasRenderingContext2D, canvas:HTMLCanvasElement, paddle:gamestate["players"][0])
 	{
 		context.beginPath();
-		context.rect(paddle.x, paddle.y, paddle.width, paddle.height);
+		console.log(paddle.y);
+		context.rect(context.canvas.width * paddle.x, context.canvas.height *paddle.y, context.canvas.width *paddle.width, context.canvas.height *paddle.height);
 		context.fillStyle = paddle.color;
 		context.strokeStyle = "white";
 		context.lineWidth = 1;
 		context.shadowBlur = 0;
 		context.shadowColor = "blue";
-		context.strokeRect(paddle.x, paddle.y, paddle.width, paddle.height);
+		context.strokeRect(context.canvas.width * paddle.x, context.canvas.height *paddle.y, context.canvas.width *paddle.width, context.canvas.height *paddle.height);
 		context.fill();
 	}
-	
+
 export interface keys
 	{
 		w:boolean;

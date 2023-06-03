@@ -10,6 +10,7 @@ import * as http from "http";
 import { Socket } from "socket.io";
 import { serialize, parse } from "cookie";
 import {initGame, gamestate, gameLoop} from "./game"
+import e from 'express';
 
 
 dotenv.config();
@@ -54,18 +55,42 @@ io.on("connection", (client:Socket) => {
 		io.emit("end");
 	})
 
-	client.on("move_down", () => {
-		console.log("je move down");
-		state.players[0].v_y += 1;
+	client.on("move_up", () => {
+		console.log("move-up");
+		state.players[0].lastKey = 'w';
+		state.keys.w = true;
+		gameLoop(state);
 	})
+
+	client.on("move_down", () => {
+		state.players[0].lastKey = 's';
+		state.keys.s = true;
+		gameLoop(state);
+	})
+
+
+
+	client.on("stop_up", () => {
+		state.players[0].v_y = 0;
+		state.keys.w = false;
+		gameLoop(state);
+	})
+
+	client.on("stop_down", () => {
+		state.players[0].v_y = 0;
+		state.keys.s = false;
+		gameLoop(state);
+	})
+
+
 });
-
-
 
 setInterval(() => {
 	gameLoop(state);
 	io.emit("gameState", state);
 }, 17);
+
+
 
 /*app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');

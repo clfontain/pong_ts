@@ -10,6 +10,7 @@ import {BallResize} from "./Ball"
 import { io, Socket } from 'socket.io-client';
 import {gamestate, initGame} from "./copy_game"
 import e from 'express';
+import { Client } from 'socket.io/dist/client';
 
 
 function Canvas(){
@@ -20,14 +21,17 @@ function Canvas(){
 	const pixelRatio = window.devicePixelRatio;
 	//const ref = useRef<HTMLDivElement | null>(null);
 	const [state, setState] = useState({players: [{
-		x: 4, y: 5, height: 30, width: 50, color: "white",
-		v_y : 0, lastKey: "null"},
+		x: 0, y: 0, height: 0, width: 0, color: "white",
+		v_y : 0, lastKey: "null", score: 0},
 	{
-		x: 4, y: 5, height: 30, width: 50, color: "white",
-		v_y : 0, lastKey: "null"}],
+		x: 0, y: 0, height: 0, width: 0, color: "white",
+		v_y : 0, lastKey: "null", score: 0}],
 	ball:{
-		x:250, y:250, dx: 1, dy: 1, rad: 10, speed:5
-	},});
+		x:0, y:0, dx: 0, dy: 0, rad: 0, speed:0, direction: 0
+	},
+	keys:{
+		w:false, s:false
+	}});
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
 	useEffect(() => {
@@ -40,36 +44,31 @@ function Canvas(){
 		socket.on("gameState", (data) => {
 			setState(data);
 		});
-		/*socket.on("end", () =>{
-			return (setHasLeft(true))
-		});*/
-
 		let key:keys = {w:false, s:false};
 		window.addEventListener("keydown", e =>
 		{
 			switch (e.key)
 			{
 			case 'w':
-				//socket.emit("move")
-				//key.w = true;
-				//paddle.lastKey = "w";
+				socket.emit("move_up")
 				break;
 			case 's':
 				socket.emit("move_down");
-				//key.s = true;
-			//paddle.lastKey = "s";
-			break;
+				break;
 			}
 		})
 		window.addEventListener("keyup", e =>
 		{
-			if (e.key === "w")
-			{}
-				/*key.w = false;
-				paddle.v_y = 0;
-			if (e.key === 's')
-				key.s = false;
-				paddle.v_y = 0;*/
+			switch(e.key)
+			{
+				case 'w':
+					socket.emit("stop_up");
+
+					break;
+				case 's':
+					socket.emit("stop_down")
+					break;
+			}
 		})
 
 			/*//let ratio:number = window.innerHeight * 0.66;
@@ -108,13 +107,13 @@ function Canvas(){
 			return;
 			context.clearRect(0,0, context.canvas.width, context.canvas.height);
 			context.beginPath();
-			context.arc( context.canvas.width * state.ball.x , context.canvas.height * state.ball.y, 10 ,0, 2*Math.PI);
+			context.arc( context.canvas.width * state.ball.x , context.canvas.height * state.ball.y, state.ball.rad * ((context.canvas.width + context.canvas.height )/2),0, 2*Math.PI);
 			context.strokeStyle ="white";
 			context.stroke();
 			context.fillStyle = "white";
 			context.lineWidth =4;
 			context.fill();
-			//drawPlayer(context, canvas, state.players[0]);
+			drawPlayer(context, canvas, state.players[0]);
 			/*const handleResize = () => {
 				//let prev:number = context.canvas.height;
 				//let ratio:number = window.innerHeight * 0.5;

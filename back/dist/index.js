@@ -65,9 +65,26 @@ io.on("connection", (client) => {
         //console.log("allo ?")
         io.emit("end");
     });
+    client.on("move_up", () => {
+        console.log("move-up");
+        state.players[0].lastKey = 'w';
+        state.keys.w = true;
+        (0, game_1.gameLoop)(state);
+    });
     client.on("move_down", () => {
-        console.log("je move down");
-        state.players[0].v_y += 1;
+        state.players[0].lastKey = 's';
+        state.keys.s = true;
+        (0, game_1.gameLoop)(state);
+    });
+    client.on("stop_up", () => {
+        state.players[0].v_y = 0;
+        state.keys.w = false;
+        (0, game_1.gameLoop)(state);
+    });
+    client.on("stop_down", () => {
+        state.players[0].v_y = 0;
+        state.keys.s = false;
+        (0, game_1.gameLoop)(state);
     });
 });
 setInterval(() => {
