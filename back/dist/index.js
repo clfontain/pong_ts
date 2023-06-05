@@ -34,6 +34,7 @@ const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const http = __importStar(require("http"));
 const game_1 = require("./game");
+const input_1 = require("./input");
 dotenv_1.default.config();
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -56,61 +57,57 @@ const io = new Server(server, {
     },
 });
 const client_tab = [];
-let player_size = 0;
+let i = 0;
 const state = (0, game_1.initGame)();
+//const state:gamestate = init_sim_mid_to_mid();
+//const state:gamestate = init_sim_top_to_mid();
 io.on("connection", (client) => {
-    player_size++;
-    client_tab[client.id] = player_size;
+    if (i < 2) {
+        state.players[i].order = client.id;
+        i++;
+    }
     client.on("disconnect", () => {
-        //console.log("allo ?")
+        let index = 0;
+        for (; index < 2; index++) {
+            if (client.id === state.players[index].order) {
+                i = index;
+            }
+        }
         io.emit("end");
     });
     client.on("move_up", () => {
-        console.log("move-up");
-        state.players[0].lastKey = 'w';
-        state.keys.w = true;
-        (0, game_1.gameLoop)(state);
+        //console.log(i);
+        if (client.id === state.players[0].order)
+            input_1.Input.movePlayerOneUp(state);
+        else if (client.id === state.players[1].order)
+            input_1.Input.movePlayerTwoUp(state);
     });
     client.on("move_down", () => {
-        state.players[0].lastKey = 's';
-        state.keys.s = true;
-        (0, game_1.gameLoop)(state);
+        if (client.id === state.players[0].order) {
+            //console.log("allo ?")
+            input_1.Input.movePlayerOneDown(state);
+        }
+        else if (client.id === state.players[1].order)
+            input_1.Input.movePlayerTwoDown(state);
     });
     client.on("stop_up", () => {
-        state.players[0].v_y = 0;
-        state.keys.w = false;
-        (0, game_1.gameLoop)(state);
+        if (client.id === state.players[0].order) {
+            input_1.Input.stopMovePlayerOneUp(state);
+        }
+        else if (client.id === state.players[1].order)
+            input_1.Input.stopMovePlayerTwoUp(state);
     });
     client.on("stop_down", () => {
-        state.players[0].v_y = 0;
-        state.keys.s = false;
-        (0, game_1.gameLoop)(state);
+        if (client.id === state.players[0].order)
+            input_1.Input.stopMovePlayerOneDown(state);
+        else if (client.id === state.players[1].order)
+            input_1.Input.stopMovePlayerTwoDown(state);
     });
 });
 setInterval(() => {
     (0, game_1.gameLoop)(state);
     io.emit("gameState", state);
 }, 17);
-/*app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
-
-
-io.on('connection', (socket) => {
-    socket.on('upgrade', (arg) => {
-        arg.y = 2;
-        //console.log(arg);
-    });
-
-    socket.on('up', (data) =>
-    {
-        data.x += 32;
-        io.emit('response_on', data);
-    });
-    socket.on('chat message', (msg) => {
-        io.emit('chat message', msg) ;
-    })
-});*/
 server.listen(port, () => {
     console.log(`listening on ${port}`);
 });

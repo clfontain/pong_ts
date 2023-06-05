@@ -8,10 +8,10 @@ import {keys} from "./Paddle"
 import {drawPlayer} from "./Paddle"
 import {BallResize} from "./Ball"
 import { io, Socket } from 'socket.io-client';
-import {gamestate, initGame} from "./copy_game"
+import {gamestate} from "../../back/game"
 import e from 'express';
 import { Client } from 'socket.io/dist/client';
-
+import { playerState } from './PlayerState';
 
 function Canvas(){
 
@@ -22,21 +22,20 @@ function Canvas(){
 	//const ref = useRef<HTMLDivElement | null>(null);
 	const [state, setState] = useState({players: [{
 		x: 0, y: 0, height: 0, width: 0, color: "white",
-		v_y : 0, lastKey: "null", score: 0},
+		v_y : 0, lastKey: "null", score: 0, order: 'null' , keys:{w:false, s:false}},
 	{
 		x: 0, y: 0, height: 0, width: 0, color: "white",
-		v_y : 0, lastKey: "null", score: 0}],
+		v_y : 0, lastKey: "null", score: 0, order: 'null' , keys:{w:false, s:false}}],
 	ball:{
 		x:0, y:0, dx: 0, dy: 0, rad: 0, speed:0, direction: 0
-	},
-	keys:{
-		w:false, s:false
-	}});
+	}
+	});
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
 	useEffect(() => {
 		setWidth(window.innerWidth);
 		setHeight(window.innerHeight > 400 ? window.innerHeight : 400);
+		//setHeight(window.innerHeight);
 	}, []);
 	useEffect(() =>
 	{
@@ -113,7 +112,9 @@ function Canvas(){
 			context.fillStyle = "white";
 			context.lineWidth =4;
 			context.fill();
+			playerState(context, state);
 			drawPlayer(context, canvas, state.players[0]);
+			drawPlayer(context, canvas, state.players[1]);
 			/*const handleResize = () => {
 				//let prev:number = context.canvas.height;
 				//let ratio:number = window.innerHeight * 0.5;
