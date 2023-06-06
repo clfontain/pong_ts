@@ -1,23 +1,30 @@
-import {gamestate} from "../../back/game"
 
-
-
-export	function drawPlayer(context:CanvasRenderingContext2D, canvas:HTMLCanvasElement, paddle:gamestate["players"][0])
+export	function drawPlayer(context:CanvasRenderingContext2D, canvas:HTMLCanvasElement, gamestate:any)
 	{
-		context.beginPath();
-		context.rect(context.canvas.width * paddle.x, context.canvas.height *paddle.y, context.canvas.width *paddle.width, context.canvas.height *paddle.height);
-		context.fillStyle = paddle.color;
-		context.strokeStyle = "white";
-		context.lineWidth = 1;
-		context.shadowBlur = 0;
-		context.shadowColor = "blue";
-		context.strokeRect(context.canvas.width * paddle.x, context.canvas.height *paddle.y, context.canvas.width *paddle.width, context.canvas.height *paddle.height);
-		context.fill();
+			context.beginPath();
+			context.rect(context.canvas.width * gamestate.player1_x, context.canvas.height *gamestate.player1_y, context.canvas.width *gamestate.player1_width, context.canvas.height *gamestate.player1_height);
+			context.fillStyle = gamestate.color;
+			context.strokeStyle = "white";
+			context.lineWidth = 1;
+			context.shadowBlur = 0;
+			context.shadowColor = "blue";
+			context.strokeRect(context.canvas.width * gamestate.player1_x, context.canvas.height *gamestate.player1_y, context.canvas.width *gamestate.player1_width, context.canvas.height *gamestate.player1_height);
+			context.fill();
+
+			context.beginPath();
+			context.rect(context.canvas.width * gamestate.player2_x, context.canvas.height *gamestate.player2_y, context.canvas.width *gamestate.player2_width, context.canvas.height *gamestate.player2_height);
+			context.fillStyle = gamestate.color;
+			context.strokeStyle = "white";
+			context.lineWidth = 1;
+			context.shadowBlur = 0;
+			context.shadowColor = "blue";
+			context.strokeRect(context.canvas.width * gamestate.player2_x, context.canvas.height *gamestate.player2_y, context.canvas.width *gamestate.player2_width, context.canvas.height *gamestate.player2_height);
+			context.fill();
 	}
 
-export function drawBall(context:CanvasRenderingContext2D, state:gamestate)
+export function drawBall(context:CanvasRenderingContext2D, gamestate:any)
 	{
-		context.arc( context.canvas.width * state.ball.x , context.canvas.height * state.ball.y, state.ball.rad * ((context.canvas.width + context.canvas.height )/2),0, 2*Math.PI);
+		context.arc( context.canvas.width * gamestate.ball_x , context.canvas.height * gamestate.ball_y, gamestate.ball_rad * ((context.canvas.width + context.canvas.height )/2),0, 2*Math.PI);
 		context.strokeStyle ="white";
 		context.stroke();
 		context.fillStyle = "white";
@@ -33,7 +40,7 @@ export function drawCanvas(context:CanvasRenderingContext2D)
 
 }
 
-export function drawScore(ctx:CanvasRenderingContext2D, game:gamestate)
+export function drawScore(ctx:CanvasRenderingContext2D, gamestate:any)
 {
 	let pixel:number = 0;
 
@@ -52,6 +59,6 @@ export function drawScore(ctx:CanvasRenderingContext2D, game:gamestate)
 		pixel = 40;
 	ctx.font = `${pixel}px Arial`;
 	ctx.fillStyle = "white";
-	ctx.fillText(`Player One :  ${game.players[0].score}`, 0.25* ctx.canvas.width , 0.1 * ctx.canvas.height);
-	ctx.fillText(`Player Two :  ${game.players[1].score}`, 0.55* ctx.canvas.width , 0.1 * ctx.canvas.height);
+	ctx.fillText(`Player One :  ${gamestate.player1_score}`, 0.25* ctx.canvas.width , 0.1 * ctx.canvas.height);
+	ctx.fillText(`Player Two :  ${gamestate.player2_score}`, 0.55* ctx.canvas.width , 0.1 * ctx.canvas.height);
 }

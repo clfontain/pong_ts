@@ -1,6 +1,6 @@
 import { gamestate } from "./game";
 
-export function init_sim_mid_to_mid()
+/*export function init_sim_mid_to_mid()
 {
 	const state:gamestate = {
 		players: [{
@@ -41,4 +41,6 @@ export function reset_sim(state:gamestate)
 	state.ball.dx = 0.01;
 	state.ball.dy = 0.01;
 	state.ball.speed = 1;
-}
+}*/
+
+export {}

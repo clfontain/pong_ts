@@ -25,43 +25,43 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Input = exports.stopMovePlayerTwoDown = exports.stopMovePlayerOneDown = exports.stopMovePlayerTwoUp = exports.stopMovePlayerOneUp = exports.movePlayerTwoDown = exports.movePlayerOneDown = exports.movePlayerTwoUp = exports.movePlayerOneUp = void 0;
 function movePlayerOneUp(state) {
-    state.players[0].lastKey = 'w';
-    state.players[0].keys.w = true;
+    state.player1.lastKey = 'w';
+    state.player1.keys.w = true;
 }
 exports.movePlayerOneUp = movePlayerOneUp;
 function movePlayerTwoUp(state) {
-    state.players[1].lastKey = 'w';
-    state.players[1].keys.w = true;
+    state.player2.lastKey = 'w';
+    state.player2.keys.w = true;
 }
 exports.movePlayerTwoUp = movePlayerTwoUp;
 function movePlayerOneDown(state) {
-    state.players[0].lastKey = 's';
-    state.players[0].keys.s = true;
+    state.player1.lastKey = 's';
+    state.player1.keys.s = true;
 }
 exports.movePlayerOneDown = movePlayerOneDown;
 function movePlayerTwoDown(state) {
-    state.players[1].lastKey = 's';
-    state.players[1].keys.s = true;
+    state.player2.lastKey = 's';
+    state.player2.keys.s = true;
 }
 exports.movePlayerTwoDown = movePlayerTwoDown;
 function stopMovePlayerOneUp(state) {
-    state.players[0].v_y = 0;
-    state.players[0].keys.w = false;
+    state.player1.v_y = 0;
+    state.player1.keys.w = false;
 }
 exports.stopMovePlayerOneUp = stopMovePlayerOneUp;
 function stopMovePlayerTwoUp(state) {
-    state.players[1].v_y = 0;
-    state.players[1].keys.w = false;
+    state.player2.v_y = 0;
+    state.player2.keys.w = false;
 }
 exports.stopMovePlayerTwoUp = stopMovePlayerTwoUp;
 function stopMovePlayerOneDown(state) {
-    state.players[0].v_y = 0;
-    state.players[0].keys.s = false;
+    state.player1.v_y = 0;
+    state.player1.keys.s = false;
 }
 exports.stopMovePlayerOneDown = stopMovePlayerOneDown;
 function stopMovePlayerTwoDown(state) {
-    state.players[1].v_y = 0;
-    state.players[1].keys.s = false;
+    state.player2.v_y = 0;
+    state.player2.keys.s = false;
 }
 exports.stopMovePlayerTwoDown = stopMovePlayerTwoDown;
 exports.Input = __importStar(require("./input"));

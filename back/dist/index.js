@@ -42,71 +42,65 @@ const port = process.env.PORT;
 app.get('/', (req, res) => {
     res.send('Express + bonjour TypeScript Server');
 });
-//const http = require('http');
 const server = http.createServer(app);
-//const io = new socketio.Server(server);
 const { Server } = require("socket.io");
 const cors = require("cors");
 app.use(cors());
-let end = false;
-//let socket_tab;
 const io = new Server(server, {
     cors: {
         origin: "http://localhost:3000",
         methods: ["GET", "POST"],
     },
 });
-const client_tab = [];
 let i = 0;
-const state = (0, game_1.initGame)();
-//const state:gamestate = init_sim_mid_to_mid();
-//const state:gamestate = init_sim_top_to_mid();
+const state = new game_1.gamestate();
 io.on("connection", (client) => {
-    if (i < 2) {
-        state.players[i].order = client.id;
+    if (i === 0) {
+        state.player1.id = client.id;
+        i++;
+    }
+    else if (i === 1) {
+        console.log("joueur 2 assigne");
+        state.player2.id = client.id;
         i++;
     }
     client.on("disconnect", () => {
-        let index = 0;
-        for (; index < 2; index++) {
-            if (client.id === state.players[index].order) {
-                i = index;
-            }
-        }
+        if (client.id === state.player1.id)
+            i = 0;
+        else if (client.id === state.player2.id)
+            i = 1;
         io.emit("end");
     });
     client.on("move_up", () => {
-        //console.log(i);
-        if (client.id === state.players[0].order)
+        if (client.id === state.player1.id)
             input_1.Input.movePlayerOneUp(state);
-        else if (client.id === state.players[1].order)
+        else if (client.id === state.player2.id)
             input_1.Input.movePlayerTwoUp(state);
     });
     client.on("move_down", () => {
-        if (client.id === state.players[0].order) {
-            //console.log("allo ?")
+        if (client.id === state.player1.id) {
             input_1.Input.movePlayerOneDown(state);
         }
-        else if (client.id === state.players[1].order)
+        else if (client.id === state.player2.id)
             input_1.Input.movePlayerTwoDown(state);
     });
     client.on("stop_up", () => {
-        if (client.id === state.players[0].order) {
+        if (client.id === state.player1.id) {
             input_1.Input.stopMovePlayerOneUp(state);
         }
-        else if (client.id === state.players[1].order)
+        else if (client.id === state.player2.id)
             input_1.Input.stopMovePlayerTwoUp(state);
     });
     client.on("stop_down", () => {
-        if (client.id === state.players[0].order)
+        if (client.id === state.player1.id)
             input_1.Input.stopMovePlayerOneDown(state);
-        else if (client.id === state.players[1].order)
+        else if (client.id === state.player2.id)
             input_1.Input.stopMovePlayerTwoDown(state);
     });
 });
 setInterval(() => {
-    (0, game_1.gameLoop)(state);
-    io.emit("gameState", state);
+    state.update();
+    io.emit("gameState", state.getData());
 }, 17);
 server.listen(port, () => {
     console.log(`listening on ${port}`);

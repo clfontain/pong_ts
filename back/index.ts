@@ -8,10 +8,8 @@ import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import * as http from "http";
 import { Socket } from "socket.io";
-import { serialize, parse } from "cookie";
-import {initGame, gamestate, gameLoop} from "./game"
-import e from 'express';
-import { init_sim_mid_to_mid, init_sim_top_to_mid, reset_sim } from './simulation';
+import {gamestate} from "./game"
+
 import { Input } from './input';
 
 
@@ -23,15 +21,14 @@ const port = process.env.PORT;
 app.get('/', (req: Request, res: Response) => {
 	res.send('Express + bonjour TypeScript Server');
   });
-//const http = require('http');
+
 const server = http.createServer(app);
-//const io = new socketio.Server(server);
+
 const { Server } = require("socket.io");
 
 const cors = require("cors");
 app.use(cors());
-let end:boolean = false;
-//let socket_tab;
+
 
 const io = new Server(server, {
 	cors:{
@@ -40,53 +37,50 @@ const io = new Server(server, {
 	},
 });
 
-const client_tab:any = [];
 let i:number = 0;
-const state:gamestate = initGame();
-//const state:gamestate = init_sim_mid_to_mid();
-//const state:gamestate = init_sim_top_to_mid();
+const state = new gamestate();
+
 io.on("connection", (client:Socket) => {
 
 
-	if (i < 2)
+	if (i === 0)
 	{
-
-		state.players[i].order = client.id;
+		state.player1.id = client.id;
+		i++;
+	}
+	else if (i === 1)
+	{
+		console.log("joueur 2 assigne")
+		state.player2.id = client.id;
 		i++;
 	}
 
 
 	client.on("disconnect", () =>
 	{
-		let index:number = 0
-		for(; index < 2; index++)
-		{
-			if (client.id === state.players[index].order)
-			{
-				i = index;
-			}
-		}
+		if (client.id === state.player1.id)
+			i = 0
+		else if (client.id === state.player2.id)
+			i = 1;
 		io.emit("end");
 	})
 
 	client.on("move_up", () =>
 	{
-		//console.log(i);
-		if (client.id === state.players[0].order)
+		if (client.id === state.player1.id)
 			Input.movePlayerOneUp(state);
-		else if(client.id === state.players[1].order)
+		else if(client.id === state.player2.id)
 			Input.movePlayerTwoUp(state);
 	})
 
 	client.on("move_down", () =>
 	{
 
-		if (client.id === state.players[0].order)
+		if (client.id === state.player1.id)
 		{
-			//console.log("allo ?")
 			Input.movePlayerOneDown(state);
 		}
-		else if(client.id === state.players[1].order)
+		else if(client.id === state.player2.id)
 			Input.movePlayerTwoDown(state);
 	})
 
@@ -94,19 +88,19 @@ io.on("connection", (client:Socket) => {
 
 	client.on("stop_up", () =>
 	{
-		if (client.id === state.players[0].order)
+		if (client.id === state.player1.id)
 		{
 			Input.stopMovePlayerOneUp(state);
 		}
-		else if(client.id === state.players[1].order)
+		else if(client.id === state.player2.id)
 			Input.stopMovePlayerTwoUp(state);
 	})
 
 	client.on("stop_down", () =>
 	{
-		if (client.id === state.players[0].order)
+		if (client.id === state.player1.id)
 			Input.stopMovePlayerOneDown(state);
-		else if(client.id === state.players[1].order)
+		else if(client.id === state.player2.id)
 			Input.stopMovePlayerTwoDown(state);
 	})
 
@@ -114,8 +108,8 @@ io.on("connection", (client:Socket) => {
 });
 
 setInterval(() => {
-	gameLoop(state);
-	io.emit("gameState", state);
+	state.update();
+	io.emit("gameState", state.getData());
 }, 17);
 
 

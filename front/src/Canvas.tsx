@@ -6,7 +6,25 @@ import { io  } from 'socket.io-client';
 function Canvas()
 {
 	//const [hasLeft, setHasLeft] = useState(false);
-	const [state, setState] = useState({players: [{
+	const [state, setState] = useState(
+	{
+		ball_x: 0,
+		ball_y: 0,
+		ball_rad: 0,
+		player1_x: 0,
+		player1_y: 0,
+		player1_height: 0,
+		player1_width: 0,
+		player1_score: 0,
+		player2_x: 0,
+		player2_y: 0,
+		player2_height: 0,
+		player2_width: 0,
+		player2_score: 0,
+	}
+
+	);
+	/*const [state, setState] = useState({players: [{
 		x: 0, y: 0, height: 0, width: 0, color: "white",
 		v_y : 0, lastKey: "null", score: 0, order: 'null' , keys:{w:false, s:false}},
 	{
@@ -15,7 +33,7 @@ function Canvas()
 	ball:{
 		x:0, y:0, dx: 0, dy: 0, rad: 0, speed:0, direction: 0
 	}
-	});
+	});*/
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
 	useEffect(() =>
@@ -62,8 +80,7 @@ function Canvas()
 		drawCanvas(context);
 		drawBall(context, state);
 		drawScore(context, state);
-		drawPlayer(context, canvas, state.players[0]);
-		drawPlayer(context, canvas, state.players[1]);
+		drawPlayer(context, canvas, state);
 		};
 		const handleResize = () =>
 		{
@@ -96,7 +113,7 @@ function Canvas()
 			handleResize();
 		}
 			return () => window.removeEventListener("resize", handleResize);
-	}, [state, ]);
+	}, [state]);
 
 	return (
 
