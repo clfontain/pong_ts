@@ -34,7 +34,6 @@ import {gamestate} from "../../back/game"
 export	function drawPlayer(context:CanvasRenderingContext2D, canvas:HTMLCanvasElement, paddle:gamestate["players"][0])
 	{
 		context.beginPath();
-		console.log(paddle.y);
 		context.rect(context.canvas.width * paddle.x, context.canvas.height *paddle.y, context.canvas.width *paddle.width, context.canvas.height *paddle.height);
 		context.fillStyle = paddle.color;
 		context.strokeStyle = "white";
