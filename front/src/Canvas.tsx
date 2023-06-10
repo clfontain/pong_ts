@@ -38,7 +38,9 @@ function Canvas()
 
 	useEffect(() =>
 	{
-		const socket = io("http://localhost:3003");
+		const socket = io("http://localhost:4242");
+		socket.emit("events", "BONSOIR", (data:any) => console.log(data));
+		;
 		socket.on("gameState", (data) => {
 			setState(data);
 		});
