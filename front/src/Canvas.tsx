@@ -24,23 +24,12 @@ function Canvas()
 	}
 
 	);
-	/*const [state, setState] = useState({players: [{
-		x: 0, y: 0, height: 0, width: 0, color: "white",
-		v_y : 0, lastKey: "null", score: 0, order: 'null' , keys:{w:false, s:false}},
-	{
-		x: 0, y: 0, height: 0, width: 0, color: "white",
-		v_y : 0, lastKey: "null", score: 0, order: 'null' , keys:{w:false, s:false}}],
-	ball:{
-		x:0, y:0, dx: 0, dy: 0, rad: 0, speed:0, direction: 0
-	}
-	});*/
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
 	useEffect(() =>
 	{
 		const socket = io("http://localhost:4242");
-		socket.emit("events", "BONSOIR", (data:any) => console.log(data));
-		;
+		//socket.emit("events", "BONSOIR", (data:any) => console.log(data));
 		socket.on("gameState", (data) => {
 			setState(data);
 		});
