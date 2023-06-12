@@ -28,7 +28,7 @@ function Canvas()
 
 	useEffect(() =>
 	{
-		const socket = io("http://localhost:4242");
+		const socket = io("http://localhost:8081");
 		//socket.emit("events", "BONSOIR", (data:any) => console.log(data));
 		socket.on("gameState", (data) => {
 			setState(data);
@@ -38,6 +38,7 @@ function Canvas()
 			switch (e.key)
 			{
 			case 'w':
+				console.log("move_up");
 				socket.emit("move_up")
 				break;
 			case 's':
