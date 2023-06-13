@@ -62,3 +62,15 @@ export function drawScore(ctx:CanvasRenderingContext2D, gamestate:any)
 	ctx.fillText(`Player One :  ${gamestate.player1_score}`, 0.25* ctx.canvas.width , 0.1 * ctx.canvas.height);
 	ctx.fillText(`Player Two :  ${gamestate.player2_score}`, 0.55* ctx.canvas.width , 0.1 * ctx.canvas.height);
 }
+
+
+export function drawEnd(ctx:CanvasRenderingContext2D, gamestate:any)
+{
+	let pixel:number = 40;
+	ctx.font = `${pixel}px Arial`;
+	ctx.fillStyle = "white";
+	if (gamestate.player1_score > gamestate.player2_score)
+		ctx.fillText(`Player One win !!!`, 0.50* ctx.canvas.width , 0.50 * ctx.canvas.height);
+	else
+		ctx.fillText(`Player Two win !!!`, 0.50* ctx.canvas.width , 0.50 * ctx.canvas.height);
+}

@@ -1,6 +1,6 @@
 import {useEffect,useRef, useState} from 'react';
 import './App.css';
-import {drawBall, drawCanvas, drawPlayer, drawScore} from "./draw"
+import {drawBall, drawCanvas, drawPlayer, drawScore, drawEnd} from "./draw"
 import { io  } from 'socket.io-client';
 
 function Canvas()
@@ -21,6 +21,7 @@ function Canvas()
 		player2_height: 0,
 		player2_width: 0,
 		player2_score: 0,
+		end: false,
 	}
 
 	);
@@ -28,7 +29,12 @@ function Canvas()
 
 	useEffect(() =>
 	{
-		const socket = io("http://localhost:8081");
+		//const socket = io("http://localhost:8080");
+		const socket = io("ws://localhost:3333", 
+       {
+       		path: "/api/v1/ws",
+        	reconnectionDelayMax: 10000,
+       });
 		//socket.emit("events", "BONSOIR", (data:any) => console.log(data));
 		socket.on("gameState", (data) => {
 			setState(data);
@@ -70,9 +76,16 @@ function Canvas()
 		return;
 		const redrawCanvas = () => {
 		drawCanvas(context);
-		drawBall(context, state);
-		drawScore(context, state);
-		drawPlayer(context, canvas, state);
+		if (state.end === false)
+		{
+			drawBall(context, state);
+			drawScore(context, state);
+			drawPlayer(context, canvas, state);
+		}	
+		else
+		{
+			drawEnd(context, state);
+		}	
 		};
 		const handleResize = () =>
 		{
